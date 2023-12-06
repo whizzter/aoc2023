@@ -2,6 +2,22 @@
 exports.textToLines = text =>
     text.split(/\r\n|\n/)
 
+exports.arraySplit = (li,splitFn) => {
+    let o=[];
+    for(let ii=0,oi=0;ii<li.length;) {
+        while(ii<li.length && !splitFn(li[ii])) {
+            if (!o[oi])
+                o[oi]=[];
+            o[oi].push(li[ii++])
+        }
+        while(ii<li.length && splitFn(li[ii])) {
+            ii++;
+            oi++;
+        }
+    }
+    return o;
+}
+
 exports.rangeExclusive = (from,to,incr) => {
     let o=[];
     while(from!==to) {
