@@ -58,7 +58,7 @@ if ("undefined" === typeof Array.prototype.groupBy)
             let kv = sel(c);
             let arr;
             if (!(arr = p.get(kv)))
-                p.set(kv, arr);
+                p.set(kv, arr=[]);
             arr.push(c);
             return p;
         }, new Map).entries()];
