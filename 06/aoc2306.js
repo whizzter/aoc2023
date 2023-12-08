@@ -9,16 +9,19 @@ function a(data) {
         .zip(timeDistLines[1])
     const rc = races.map(
         r=>al.rangeExclusive(0,r[0]+1)
+            // map loadtime to distance travelled
             .map(loadTime=>(r[0]-loadTime)*loadTime)
+            // pick out the successful ones
             .filter(dist=>dist>r[1])
+            // and count them
             .length
-            //.reduce((a,c)=>a*c.length,1)
     ).reduce((a,c)=>a*c,1)
     return rc;
 }
 function b(data) {
     const timeDistLines = 
         al.textToLines(data)
+        // slightly different parsing by ignoring spaces
         .map(l=>[parseInt(l.split(/:/)[1].replace(/\s/g,""))]); // (1).map(tn=>parseInt(tn)));
     const races = timeDistLines[0]
         .zip(timeDistLines[1])

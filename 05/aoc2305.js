@@ -2,57 +2,80 @@ const fs = require("fs");
 const al = require("../aoclib.js")
 
 function a(data) {
-    const li = al.textToLines(data);
-    const ms = al.arraySplit(li,l=>!l.length)
+    const lines = al.textToLines(data);
+    const mappingSegments = al.arraySplit(lines,l=>!l.length)
+    // parse out the seeds from the first segment (special one-liner)
     const seeds = 
-        ms[0][0]
+        mappingSegments[0][0]
         .split(/:/)[1]
         .trim()
         .split(/\s/g)
         .map(v=>parseInt(v))
-    const maps = ms
+    const mapFunctions = mappingSegments
+        // skip the seed segment
         .slice(1)
-        .map(mi=>mi.slice(1).map(imi=>imi.split(/ /).map(nt=>parseInt(nt))))
         .map(mi=>
+            mi
+            // we ignore the mapping name, they're all consecutive anyhow
+            .slice(1)
+            .map(imi=>imi
+                // split each line in a mapping by spaces
+                .split(/ /)
+                // and convert to numbers
+                .map(nt=>parseInt(nt))))
+        .map(mappingInfo=>
             (idx)=>{
-                const rem = mi.find(imi=>imi[1]<=idx&&idx<imi[1]+imi[2]);
+                // locate a mapping info that matches the input
+                const rem = mappingInfo.find(imi=>imi[1]<=idx&&idx<imi[1]+imi[2]);
+                // if a mapping info exists, we adjust the index,otherwise retain it.
                 return rem?idx-rem[1]+rem[0]:idx;
             }
             )
                 //mi.reduce((idx,imi)=>imi[1]<idx&&idx<imi[1]+imi[2]?idx-imi[1]+imi[0]:idx,idx))
-    const fd = seeds.map(s=>maps.reduce((p,m)=>m(p),s) )
+    const fd = seeds.map(s=>mapFunctions.reduce((p,m)=>m(p),s) )
     return fd.reduce((p,c)=>Math.min(p,c),fd[0]);
 }
 function b(data) {
-    const li = al.textToLines(data);
-    const ms = al.arraySplit(li,l=>!l.length)
+    const lines = al.textToLines(data);
+    const mappingSegments = al.arraySplit(lines,l=>!l.length)
+    // parsing and functions is same as in A
     const seeds = 
-        ms[0][0]
+        mappingSegments[0][0]
         .split(/:/)[1]
         .trim()
         .split(/\s/g)
         .map(v=>parseInt(v))
-    const maps = ms
+    const mapFunctions = mappingSegments
         .slice(1)
-        .map(mi=>mi.slice(1).map(imi=>imi.split(/ /).map(nt=>parseInt(nt))))
-        .map(mi=>
+        .map(mi=>mi
+            .slice(1)
+            .map(imi=>imi
+                .split(/ /)
+                .map(nt=>parseInt(nt))))
+        .map(mappingInfo=>
             (idx)=>{
-                const rem = mi.find(imi=>imi[1]<=idx&&idx<imi[1]+imi[2]);
+                const rem = mappingInfo.find(imi=>imi[1]<=idx&&idx<imi[1]+imi[2]);
                 return rem?idx-rem[1]+rem[0]:idx;
             }
             )
+    
+    // the below variables are just an debug-output since solving the problem will take some CPU time with brute-force
     let c = 0;
     let step = 10_000_000;
+    // combine [1 2 3 4] into [[1,2],[3,4]] by zipping with an offset-by-1 slice and filtering out odd ones.
     let segments= seeds.zip(seeds.slice(1)).filter((v,i)=>!(i&1))
     
+    // now run the segments
     return segments.reduce((mi,seg)=>{
-        let se = seg[0]+seg[1];
-        for(let i=seg[0];i<se;i++) {
+        let segmentEnd = seg[0]+seg[1];
+        for(let i=seg[0];i<segmentEnd;i++) {
             let v = i; // seed
-            for(let j=0;j<maps.length;j++) {
-                v = maps[j](v);
+            for(let j=0;j<mapFunctions.length;j++) {
+                v = mapFunctions[j](v);
             }
+            // update minimum after all mappings are applied
             mi = Math.min(mi,v);
+            // debug-counter-update-render
             c++;
             if (0==(c%step)) {
                 console.log("Seed gr "+(c/step))
