@@ -69,6 +69,11 @@ let adjCoord = [
     [-1, 0], [+1, 0],
     [-1, +1], [0, +1], [+1, +1]]
 
+/**
+ * 
+ * @param {*} a 2d map 
+ * @param {*} f A function called for each cell, arguments are (cellValue,cellCoord,neighbourCellValues,neighbourCellCoords)
+ */
 exports.adjacent2d=function (map, f) {
     return map.map((row, ri) => {
         return row.map((cell, ci) => {
