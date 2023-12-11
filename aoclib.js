@@ -86,3 +86,28 @@ exports.adjacent2d=function (map, f) {
         });
     });
 }
+
+const id = v=>v;
+exports.id=id;
+exports.transpose=function(a,a1,a2) {
+    let defv = undefined;
+    let xf = id;
+    if (a1 instanceof Function) {
+        xf=a1;
+        defv=a2;
+    } else {
+        defv=a1;
+    }
+    let o=[]
+    //let maxl = a.reduce((p,r)=>Math.max(r.length),0);
+    for (let i=0;i<a.length;i++) {
+        for (let j=0;j<a[i].length;j++) {
+            while(o.length<=j)
+                o.push([]);
+            while(o[j].length<i)
+                o[j].push(defv);
+            o[j][i]=xf(a[i][j],i,j)
+        }
+    }
+    return o;
+}
