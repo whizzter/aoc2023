@@ -124,6 +124,10 @@ exports.transpose = function (a, a1, a2) {
   return o;
 };
 
+exports.transposeText = function(ta) {
+  return exports.transpose(ta.map(l=>[...l])).map(l=>l.join(""))
+}
+
 exports.memoize = (f) => {
   const mem = new Map();
   return (...args) => {
