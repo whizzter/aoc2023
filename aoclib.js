@@ -28,6 +28,9 @@ exports.repeat = (what, times) => {
   return exports.rangeExclusive(0, times, 1).map((v) => what);
 };
 
+exports.hexbitsToChar = c=>String.fromCharCode(c<10?c+'0'.charCodeAt(0):c-10+'A'.charCodeAt(0));
+
+
 if ("undefined" === typeof Array.prototype.zip)
   Array.prototype.zip = function (other) {
     return this.map((e, i) => [e, other[i]]);
