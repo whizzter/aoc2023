@@ -32,7 +32,7 @@ const build = (data) => {
         const ct = types.find(t=>t[0]===cell).slice(1);
         return ct.map(co=>v2add(coord,co));
     })
-    // infofield is build from the connection field and contains a dist, connections and winding-flips (used for part2)
+    // infofield is build from the connection field and contains a dist(d), connections and below-winding-flips (stored as (b), used for part2)
     let rv;
     const infoField = al.adjacent2d(connsField,(cell,coord,nbValues,nbCells)=>{
         if (cell.length!=4)
