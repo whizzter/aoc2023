@@ -35,6 +35,17 @@ if ("undefined" === typeof Array.prototype.zip)
   Array.prototype.zip = function (other) {
     return this.map((e, i) => [e, other[i]]);
   };
+  
+if ("undefined" === typeof Array.prototype.replaceAppend)
+  Array.prototype.replaceAppend = function (value,matchPred) {
+    let wasMatch = false;
+    var na = this.map(v=>{
+      let match = matchPred(v,value);
+      wasMatch |= match;
+      return match?value:v;
+    })
+    return wasMatch?na:[...na,value];
+  };
 
 if ("undefined" === typeof Array.prototype.distinct)
   Array.prototype.distinct = function (sel) {
